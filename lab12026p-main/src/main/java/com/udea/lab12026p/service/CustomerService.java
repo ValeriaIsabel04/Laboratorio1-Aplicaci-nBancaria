@@ -39,4 +39,26 @@ public class CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toDTO(savedCustomer);
     }
+
+    // Método para ELIMINAR cliente
+    public void deleteCustomer(@NonNull Long id) {
+        if (!customerRepository.existsById(id)) {
+            throw new RuntimeException("Cliente no encontrado con id: " + id);
+        }
+        customerRepository.deleteById(id);
+    }
+
+    // Método para ACTUALIZAR cliente
+    public CustomerDTO updateCustomer(@NonNull Long id, CustomerDTO customerDTO) {
+        Customer existingCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        existingCustomer.setFirstName(customerDTO.getFirstName());
+        existingCustomer.setLastName(customerDTO.getLastName());
+        existingCustomer.setAccountNumber(customerDTO.getAccountNumber());
+        existingCustomer.setBalance(customerDTO.getBalance());
+
+        Customer updatedCustomer = customerRepository.save(existingCustomer);
+        return customerMapper.toDTO(updatedCustomer);
+    }
 }
